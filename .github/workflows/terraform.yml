@@ -1,7 +1,5 @@
 name: "Terraform"
 
-6a9VDFOWmvSDFw.atlasv1.pQZ6lsQIldsbxG4zg9DmvGiG0Qs1gFJfYf0GLyKamhZ8BHKyk6GmhwDjFEP51q4uDDU
-
 on:
   push:
     branches:
