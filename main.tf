@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "remote" {
-	organization = "yushin-private"
+    organization = "yushin-private"
 
     workspaces {
       name = "github-actions"
