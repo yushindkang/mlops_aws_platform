@@ -1,6 +1,6 @@
 
 
-module "s3_bucket" {
+resource "aws_s3_bucket" "test_bucket" {
   source = "terraform-aws-modules/s3-bucket/aws"
 
   bucket = "mlops-platform-training-data"
