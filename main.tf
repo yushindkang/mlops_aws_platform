@@ -42,10 +42,5 @@ resource "aws_lambda_function" "test_lambda" {
 
   runtime = "python3.8"
 
-  environment {
-    variables = {
-      foo = "bar"
-    }
-  }
 }
 # test
