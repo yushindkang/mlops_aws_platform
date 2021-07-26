@@ -7,6 +7,7 @@ resource "aws_s3_bucket" "test_bucket" {
 }
 
 
+
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
@@ -29,6 +30,7 @@ EOF
 
 resource "aws_lambda_function" "test_lambda" {
   filename      = "lambda_test.zip"
+
   function_name = "trigger workflow"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "index.test"
