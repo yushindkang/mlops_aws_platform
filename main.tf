@@ -11,7 +11,7 @@ resource "aws_s3_bucket" "test_bucket" {
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
-  assume_role_policy = <<EOF
+  assume_role_policy = <<-POLICY
 {
   "Version": "2012-10-17",
   "Statement": [
@@ -25,7 +25,7 @@ resource "aws_iam_role" "iam_for_lambda" {
     }
   ]
 }
-EOF
+POLICY
 }
 
 resource "aws_lambda_function" "test_lambda" {
