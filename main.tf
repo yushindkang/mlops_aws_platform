@@ -1,7 +1,7 @@
 resource "aws_s3_bucket" "test_bucket" {
   bucket = "mlops-platform-training-data"
   acl    = "private"
-  versioning = {
+  versioning {
     enabled = true
   }
 }
