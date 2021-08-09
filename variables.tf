@@ -7,7 +7,7 @@ variable "cluster_name" {
     default = "getting-started-eks"
 }
 
-var "map_accounts" {
+variable "map_accounts" {
     description = "Additional aws account numbers to add to the aws-auth config map."
     type = list(string)
 
@@ -17,7 +17,7 @@ var "map_accounts" {
     ]
 }
 
-var "map_roles" {
+variable "map_roles" {
     description = "Additional IAM roles to add to the aws-auth configmap."
     type = list(object({
         rolearn = string
