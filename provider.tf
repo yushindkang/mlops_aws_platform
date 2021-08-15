@@ -1,16 +1,8 @@
 terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-//    random = {
-//      source = "hashicorp/random"
-//    }
-  }
+    required_version = ">= 0.12.0"
 }
 
-
-
 provider "aws" {
-  region = "ap-southeast-2"
+    version = ">= 2.28.1"
+    region  = var.region
 }
