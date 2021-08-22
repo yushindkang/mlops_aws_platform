@@ -23,15 +23,15 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
-
-    
+  
       - name: Terraform Init
         id: init
         run: terraform init
       
-      - name: Remove config map
-        id: remove-map
-        run: terraform state rm module.cluster.kubernetes_config_map.aws-auth
+      - name: list
+        id: list
+        run: terraform state list
+      
       - name: Terraform Validate
         id: validate
         run: terraform validate -no-color
