@@ -43,14 +43,14 @@ variable "map_users" {
   }))
 
   default = [
+#     {
+#       userarn  = "arn:aws:iam::112227029085:user/canary"
+#       username = "canary"
+#       groups   = ["system:masters"]
+#     },
     {
-      userarn  = "arn:aws:iam::112227029085:user/canary"
-      username = "canary"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user2"
-      username = "user2"
+      userarn  = "arn:aws:iam::112227029085:user/admin"
+      username = "admin"
       groups   = ["system:masters"]
     },
   ]
