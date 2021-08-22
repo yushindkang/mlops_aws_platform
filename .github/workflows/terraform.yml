@@ -23,6 +23,10 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
+
+      - name: Remove config map
+        id: remove-map
+        run: terraform state rm module.cluster.kubernetes_config_map.aws-auth
     
       - name: Terraform Init
         id: init
