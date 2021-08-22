@@ -12,7 +12,7 @@ variable "map_accounts" {
   type        = list(string)
 
   default = [
-    "777777777",
+    "112227029085",
     "888888888",
   ]
 }
@@ -27,8 +27,8 @@ variable "map_roles" {
 
   default = [
     {
-      rolearn  = "arn:aws:iam::666666666:role/role1"
-      username = "role1"
+      rolearn  = "arn:aws:iam::112227029085:role/Admins"
+      username = "Admins"
       groups   = ["system:masters"]
     },
   ]
@@ -44,8 +44,8 @@ variable "map_users" {
 
   default = [
     {
-      userarn  = "arn:aws:iam::66666666666:user/user1"
-      username = "user1"
+      userarn  = "arn:aws:iam::112227029085:user/canary"
+      username = "canary"
       groups   = ["system:masters"]
     },
     {
