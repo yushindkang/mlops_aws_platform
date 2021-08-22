@@ -3,7 +3,7 @@ terraform {
     organization = "yushin-private"
 
     workspaces {
-      name = "mlops"
+      name = "aws-mlops"
     }
   }
 }
