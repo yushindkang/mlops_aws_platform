@@ -28,9 +28,9 @@ jobs:
         id: init
         run: terraform init
       
-      - name: list
-        id: list
-        run: terraform state list
+      - name: rm
+        id: rm
+        run: terraform state rm
       
       - name: Terraform Validate
         id: validate
