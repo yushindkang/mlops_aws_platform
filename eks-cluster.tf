@@ -11,7 +11,6 @@ module "eks" {
   cluster_name    = local.cluster_name
   cluster_version = "1.20"
   subnets         = flatten([module.vpc.private_subnets, module.vpc.public_subnets])
-  manage_aws_auth = false
 
   tags = {
     Environment = "training"
