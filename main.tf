@@ -164,51 +164,51 @@ resource "kubernetes_service" "example" {
 
 
 
-resource "aws_s3_bucket" "test_bucket" {
-  bucket = "mlops-platform-training-data"
-  acl    = "private"
-  versioning {
-    enabled = true
-  }
-}
+# resource "aws_s3_bucket" "test_bucket" {
+#   bucket = "mlops-platform-training-data"
+#   acl    = "private"
+#   versioning {
+#     enabled = true
+#   }
+# }
 
 
 
-resource "aws_iam_role" "iam_for_lambda" {
-  name = "iam_for_lambda"
+# resource "aws_iam_role" "iam_for_lambda" {
+#   name = "iam_for_lambda"
 
-  assume_role_policy = <<-POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "lambda.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-POLICY
-}
+#   assume_role_policy = <<-POLICY
+# {
+#   "Version": "2012-10-17",
+#   "Statement": [
+#     {
+#       "Action": "sts:AssumeRole",
+#       "Principal": {
+#         "Service": "lambda.amazonaws.com"
+#       },
+#       "Effect": "Allow",
+#       "Sid": ""
+#     }
+#   ]
+# }
+# POLICY
+# }
 
 
-module "lambda_function" {
-  source = "terraform-aws-modules/lambda/aws"
+# module "lambda_function" {
+#   source = "terraform-aws-modules/lambda/aws"
 
-  function_name = "my-lambda1"
-  description   = "My awesome lambda function"
-  handler       = "index.lambda_handler"
-  runtime       = "python3.8"
+#   function_name = "my-lambda1"
+#   description   = "My awesome lambda function"
+#   handler       = "index.lambda_handler"
+#   runtime       = "python3.8"
 
-  source_path = "./lambda_test.py"
+#   source_path = "./lambda_test.py"
 
-  tags = {
-    Name = "my-lambda1"
-  }
-}
+#   tags = {
+#     Name = "my-lambda1"
+#   }
+# }
 
 
 # resource "aws_lambda_function" "test_lambda" {

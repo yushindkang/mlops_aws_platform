@@ -4,7 +4,7 @@ variable "region" {
 }
 
 variable "cluster_name" {
-  default = "getting-started-eks"
+  default = "mlops"
 }
 
 variable "map_accounts" {
@@ -13,7 +13,6 @@ variable "map_accounts" {
 
   default = [
     "112227029085",
-    "888888888",
   ]
 }
 
