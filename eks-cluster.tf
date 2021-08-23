@@ -6,6 +6,10 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_id
 }
 
+locals {
+  pem_mac_16 = "yushin_mac_16"
+}
+
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
@@ -30,7 +34,7 @@ module "eks" {
       additional_userdata           = "echo foo bar"
       asg_desired_capacity          = 2
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
-      key_name                      = yushin_mac_16
+      key_name                      = local.pem_mac_16
     },
     {
       name                          = "worker-group-2"
@@ -38,7 +42,7 @@ module "eks" {
       additional_userdata           = "echo foo bar"
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
       asg_desired_capacity          = 1
-      key_name                      = yushin_mac_16
+      key_name                      = local.pem_mac_16
     },
   ]
 }
