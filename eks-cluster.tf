@@ -16,6 +16,7 @@ module "eks" {
   cluster_version = "1.20"
   private_subnets = [module.vpc.private_subnets]
   public_subnets  = [module.vpc.public_subnets]
+
   # cluster_endpoint_public_access = true  default is true 
 
   tags = {
