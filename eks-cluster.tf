@@ -14,7 +14,8 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
   cluster_version = "1.20"
-  subnets         = flatten([module.vpc.public_subnets])
+  subnets         = flatten([module.vpc.public_subnets, module.vpc.public_subnets])
+
   # cluster_endpoint_public_access = true  default is true 
 
   tags = {
