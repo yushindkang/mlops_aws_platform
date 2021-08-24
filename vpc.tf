@@ -1,51 +1,54 @@
-variable "region" {
-  default     = "ap-southeast-2"
-  description = "AWS region"
+#
+# VPC Resources
+#  * VPC
+#  * Subnets
+#  * Internet Gateway
+#  * Route Table
+#
+
+resource "aws_vpc" "demo" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = map(
+    "Name", "terraform-eks-demo-node",
+    "kubernetes.io/cluster/${var.cluster-name}", "shared",
+  )
 }
 
-provider "aws" {
-  region = var.region
-}
+resource "aws_subnet" "demo" {
+  count = 2
 
-data "aws_availability_zones" "available" {}
-
-locals {
-  # cluster_name = "mlops-eks-${random_string.suffix.result}"
-  cluster_name = "mlops-eks"
-
-}
-
-resource "random_string" "suffix" {
-  length  = 8
-  special = false
-}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "3.2.0"
-
-  name                    = "mlops-vpc"
-  cidr                    = "10.0.0.0/16"
-  azs                     = data.aws_availability_zones.available.names
-  private_subnets         = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets          = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
-  enable_nat_gateway      = true
-  single_nat_gateway      = true
-  enable_dns_hostnames    = true
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  cidr_block              = "10.0.${count.index}.0/24"
   map_public_ip_on_launch = true
+  vpc_id                  = aws_vpc.demo.id
 
+  tags = map(
+    "Name", "terraform-eks-demo-node",
+    "kubernetes.io/cluster/${var.cluster-name}", "shared",
+  )
+}
+
+resource "aws_internet_gateway" "demo" {
+  vpc_id = aws_vpc.demo.id
 
   tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
+    Name = "terraform-eks-demo"
   }
+}
 
-  public_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/elb"                      = "1"
-  }
+resource "aws_route_table" "demo" {
+  vpc_id = aws_vpc.demo.id
 
-  private_subnet_tags = {
-    "kubernetes.io/cluster/${local.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb"             = "1"
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.demo.id
   }
+}
+
+resource "aws_route_table_association" "demo" {
+  count = 2
+
+  subnet_id      = aws_subnet.demo.*.id[count.index]
+  route_table_id = aws_route_table.demo.id
 }

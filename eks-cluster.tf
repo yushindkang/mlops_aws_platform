@@ -1,50 +1,77 @@
-data "aws_eks_cluster" "cluster" {
-  name = module.eks.cluster_id
-}
+#
+# EKS Cluster Resources
+#  * IAM Role to allow EKS service to manage other AWS services
+#  * EC2 Security Group to allow networking traffic with EKS cluster
+#  * EKS Cluster
+#
 
-data "aws_eks_cluster_auth" "cluster" {
-  name = module.eks.cluster_id
-}
+resource "aws_iam_role" "demo-cluster" {
+  name = "terraform-eks-demo-cluster"
 
-locals {
-  pem_mac_16 = "yushin_mac_16"
-}
-
-module "eks" {
-  source          = "terraform-aws-modules/eks/aws"
-  cluster_name    = local.cluster_name
-  cluster_version = "1.20"
-  subnets         = flatten([module.vpc.private_subnets, module.vpc.public_subnets])
-  # manage_aws_auth = false Need to manually apply if set to false. 
-
-
-  # cluster_endpoint_public_access = true  default is true 
-
-  tags = {
-    Environment = "test"
-  }
-
-  vpc_id = module.vpc.vpc_id
-
-  workers_group_defaults = {
-    root_volume_type = "gp2"
-  }
-
-  worker_groups = [
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
     {
-      name                          = "worker-group-1"
-      instance_type                 = "t2.small"
-      asg_desired_capacity          = 1
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
-      key_name                      = local.pem_mac_16
-    },
-    {
-      name                          = "worker-group-2"
-      instance_type                 = "t2.medium"
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_two.id]
-      asg_desired_capacity          = 1
-      key_name                      = local.pem_mac_16
-    },
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "eks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
   ]
 }
+POLICY
+}
 
+resource "aws_iam_role_policy_attachment" "demo-cluster-AmazonEKSClusterPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.demo-cluster.name
+}
+
+resource "aws_iam_role_policy_attachment" "demo-cluster-AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.demo-cluster.name
+}
+
+resource "aws_security_group" "demo-cluster" {
+  name        = "terraform-eks-demo-cluster"
+  description = "Cluster communication with worker nodes"
+  vpc_id      = aws_vpc.demo.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "terraform-eks-demo"
+  }
+}
+
+resource "aws_security_group_rule" "demo-cluster-ingress-workstation-https" {
+  cidr_blocks       = [local.workstation-external-cidr]
+  description       = "Allow workstation to communicate with the cluster API Server"
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.demo-cluster.id
+  to_port           = 443
+  type              = "ingress"
+}
+
+resource "aws_eks_cluster" "demo" {
+  name     = var.cluster-name
+  role_arn = aws_iam_role.demo-cluster.arn
+
+  vpc_config {
+    security_group_ids = [aws_security_group.demo-cluster.id]
+    subnet_ids         = aws_subnet.demo[*].id
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.demo-cluster-AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.demo-cluster-AmazonEKSVPCResourceController,
+  ]
+}
