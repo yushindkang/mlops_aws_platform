@@ -17,6 +17,7 @@ module "eks" {
   subnets         = module.vpc.public_subnets
   manage_aws_auth = false
 
+
   # cluster_endpoint_public_access = true  default is true 
 
   tags = {
