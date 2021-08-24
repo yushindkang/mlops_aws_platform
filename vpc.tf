@@ -11,7 +11,7 @@ data "aws_availability_zones" "available" {}
 
 locals {
   # cluster_name = "mlops-eks-${random_string.suffix.result}"
-  cluster_name = "mlops-eks-PvJaEFg9"
+  cluster_name = "mlops-eks"
 
 }
 
