@@ -14,8 +14,8 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = local.cluster_name
   cluster_version = "1.20"
-  subnets         = module.vpc.private_subnets
-  # manage_aws_auth = false
+  subnets         = flatten([module.vpc.private_subnets, module.vpc.public_subnets])
+  # manage_aws_auth = false Need to manually apply if set to false. 
 
 
   # cluster_endpoint_public_access = true  default is true 
@@ -37,6 +37,7 @@ module "eks" {
       asg_desired_capacity          = 1
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
       key_name                      = local.pem_mac_16
+      public_ip                     = true
     },
     {
       name                          = "worker-group-2"
