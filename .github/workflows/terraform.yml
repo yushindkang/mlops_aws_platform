@@ -32,10 +32,10 @@ jobs:
         id: validate
         run: terraform validate -no-color
 
-      # - name: Terraform rm
-      #   id: rm
-      #   if: github.event_name == 'pull_request' 
-      #   run: terraform state rm module.eks.kubernetes_config_map.aws_auth 
+      - name: Terraform rm
+        id: rm
+        if: github.event_name == 'pull_request' 
+        run: terraform state rm module.eks.kubernetes_config_map.aws_auth 
 
 
       - name: Terraform Plan
