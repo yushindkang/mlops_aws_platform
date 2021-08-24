@@ -37,7 +37,6 @@ module "eks" {
       asg_desired_capacity          = 1
       additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
       key_name                      = local.pem_mac_16
-      public_ip                     = true
     },
     {
       name                          = "worker-group-2"
